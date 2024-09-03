@@ -1,7 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { getSignUpInfoReq, signUpReq } from '@/apis/userAPIs/userAPIs';
+import {
+  getSignUpInfoReq,
+  presignedUrlReq,
+  signUpReq,
+} from '@/apis/userAPIs/userAPIs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import Form1 from './Form1';
@@ -13,6 +17,10 @@ import {
   isForm3Valid,
 } from '@/utils/regexFunctions/regex';
 import { twMerge } from 'tailwind-merge';
+
+// types
+import { s3UploadData, UserData } from '@/types/types';
+import { uploadToS3Req } from '@/apis/s3APIs/s3APIs';
 
 interface UserFormProps {
   step: number;
@@ -29,7 +37,8 @@ export default function UserForm({
   handlePrev,
   handleNext,
 }: UserFormProps) {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<UserData | null>(null);
+  const [selectedImg, setSelectedImg] = useState<File | null>(null);
 
   const { data, isPending, isError } = useQuery({
     queryKey: ['signup'],
@@ -38,36 +47,44 @@ export default function UserForm({
 
   useEffect(() => {
     setFormData({
-      ...formData,
       googleSub: data?.data.sub,
       firstName: data?.data.firstName,
       lastName: data?.data.lastName,
       email: data?.data.email,
+      imgKey: '',
+      birthday: '',
       role: [],
-      profession: [],
+      mentorProfession: [],
       availableDays: [],
-      canHelpWith: [],
+      mentorCanHelpWith: [],
+      mentoringArchive: [],
+      description: '',
+      connections: [],
     });
   }, [data]);
 
   useEffect(() => {
-    switch (step) {
-      case 1:
-        if (isForm1Valid(formData)) setCompletedForm(1);
-        else setCompletedForm(0);
-        break;
-      case 2:
-        if (isForm2Valid(formData)) setCompletedForm(2);
-        else setCompletedForm(1);
-        break;
-      case 3:
-        if (isForm3Valid(formData)) setCompletedForm(3);
-        else setCompletedForm(2);
-        break;
+    if (formData) {
+      switch (step) {
+        case 1:
+          if (isForm1Valid(formData, selectedImg)) setCompletedForm(1);
+          else setCompletedForm(0);
+          break;
+        case 2:
+          if (isForm2Valid(formData)) setCompletedForm(2);
+          else setCompletedForm(1);
+          break;
+        case 3:
+          if (isForm3Valid(formData)) setCompletedForm(3);
+          else setCompletedForm(2);
+          break;
+      }
     }
-  }, [formData, step]);
+  }, [formData, selectedImg, step]);
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!formData) return;
+
     const newFormData = {
       ...formData,
       [e.target.name]: e.target.value,
@@ -79,22 +96,75 @@ export default function UserForm({
   const handleFormSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    mutation.mutate(formData);
+    if (!formData || !selectedImg) return;
+
+    refetch();
   };
+
+  const {
+    data: presignedData,
+    isPending: presignedPending,
+    refetch,
+  } = useQuery({
+    queryKey: ['s3url', selectedImg?.name],
+    queryFn: () => {
+      if (selectedImg) return presignedUrlReq(selectedImg?.name);
+      // return Promise.reject(new Error('Selected image is not available'));
+    },
+    enabled: false,
+    retry: false,
+  });
+
+  useEffect(() => {
+    const s3 = async () => {
+      if (presignedData && selectedImg) {
+        const url = presignedData.data.presignedUrl;
+        const imgKey = presignedData.data.imgKey;
+
+        const response = await S3UploadMutation.mutateAsync({
+          url: url,
+          file: selectedImg,
+        });
+
+        if (!formData) return;
+
+        const newFormData = {
+          ...formData,
+          imgKey: imgKey,
+        };
+
+        if (response) {
+          signUpMutation.mutate(newFormData);
+        }
+      }
+    };
+
+    s3();
+  }, [presignedData]);
 
   const router = useRouter();
 
-  const mutation = useMutation({
-    mutationFn: (signUpForm: any) => signUpReq(signUpForm),
+  const signUpMutation = useMutation({
+    mutationFn: (formData: UserData) => signUpReq(formData),
     onSuccess: () => {
       router.push('/dashboard');
     },
   });
 
+  const S3UploadMutation = useMutation({
+    mutationFn: (uploadData: s3UploadData) => uploadToS3Req(uploadData),
+    onSuccess: () => {},
+  });
+
   return (
     <form className="">
       {step === 1 && (
-        <Form1 formData={formData} handleFormChange={handleFormChange} />
+        <Form1
+          formData={formData}
+          handleFormChange={handleFormChange}
+          selectedImg={selectedImg}
+          setSelectedImg={setSelectedImg}
+        />
       )}
       {step === 2 && (
         <Form2
@@ -104,10 +174,10 @@ export default function UserForm({
         />
       )}
       {step === 3 && <Form3 formData={formData} setFormData={setFormData} />}
-      <div className="flex justify-between mt-5">
+      <div className="mt-5 flex justify-between">
         <button
           onClick={handlePrev}
-          className={`cursor-pointer py-2 px-5 bg-green-800 text-white rounded-xl ${step > 1 ? 'block' : 'invisible'}`}
+          className={`cursor-pointer rounded-xl bg-green-800 px-5 py-2 text-white ${step > 1 ? 'block' : 'invisible'}`}
         >
           Prev
         </button>
@@ -115,7 +185,7 @@ export default function UserForm({
           <button
             onClick={handleNext}
             className={twMerge(
-              `py-2 px-5 rounded-xl ${completedForm === step ? 'bg-green-800 text-white cursor-pointer' : 'bg-gray-300 cursor-not-allowed'}`,
+              `rounded-xl px-5 py-2 ${completedForm === step ? 'cursor-pointer bg-green-800 text-white' : 'cursor-not-allowed bg-gray-300'}`,
             )}
             disabled={completedForm === step ? false : true}
           >
@@ -126,7 +196,7 @@ export default function UserForm({
             type="submit"
             onClick={handleFormSubmit}
             className={twMerge(
-              `py-2 px-5 rounded-xl ${completedForm === 3 ? 'bg-green-800 text-white cursor-pointer' : 'bg-gray-300 cursor-not-allowed'}`,
+              `rounded-xl px-5 py-2 ${completedForm === 3 ? 'cursor-pointer bg-green-800 text-white' : 'cursor-not-allowed bg-gray-300'}`,
             )}
             disabled={completedForm === 3 ? false : true}
           >

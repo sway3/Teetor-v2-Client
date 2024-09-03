@@ -21,12 +21,12 @@ export default function Slideshow() {
   }, []);
 
   return (
-    <div className="relative w-full h-[100vh]">
+    <div className="relative h-[100vh] w-full">
       {imgPaths.map((imgPath: string, index: number) => (
         <div
           key={index}
-          className={`absolute inset-0 transition-opacity w-full h-full duration-500 ${
-            index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+          className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${
+            index === currentSlide ? 'z-10 opacity-100' : 'z-0 opacity-0'
           }`}
         >
           <Image

@@ -1,3 +1,5 @@
+import DesktopNav from './DesktopNav';
+import MobileNav from './MobileNav';
 import NavLogo from './NavLogo';
 
 interface NavBarProps {
@@ -6,9 +8,9 @@ interface NavBarProps {
 
 export default function NavBar({ className = '' }: NavBarProps) {
   return (
-    <nav className="flex justify-center items-center h-12">
-      <NavLogo />
-      <ul></ul>
-    </nav>
+    <>
+      <MobileNav />
+      <DesktopNav />
+    </>
   );
 }

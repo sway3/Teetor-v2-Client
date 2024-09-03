@@ -1,5 +1,6 @@
 'use client';
 
+import { AuthContextProvider } from '@/provider/AuthContext';
 import {
   isServer,
   QueryClient,
@@ -37,6 +38,9 @@ export default function Providers({ children }: ProvidersType) {
   const queryClient = getQueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      {/* <AuthContextProvider>{children}</AuthContextProvider> */}
+    </QueryClientProvider>
   );
 }

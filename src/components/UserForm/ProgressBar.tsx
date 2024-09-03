@@ -8,9 +8,9 @@ export default function ProgressBar({ step }: ProgressBarProps) {
   const percentage = ((step - 1) / 2) * 100;
 
   return (
-    <div className="mt-3 flex justify-between items-center relative before:absolute before:bg-[#ddd] before:h-1 before:w-full">
+    <div className="relative mt-3 flex items-center justify-between before:absolute before:h-1 before:w-full before:bg-[#ddd]">
       <div
-        className="absolute top-[50%] left-0 transform -translate-y-[50%] h-1 z-10 transition-all duration-150 ease-in"
+        className="absolute left-0 top-[50%] z-10 h-1 -translate-y-[50%] transform transition-all duration-150 ease-in"
         style={{
           width: `${percentage}%`,
           backgroundColor: step > 1 ? 'green' : '#ddd',
@@ -18,21 +18,21 @@ export default function ProgressBar({ step }: ProgressBarProps) {
       />
       <div
         className={twMerge(
-          `bg-[#ddd] w-7 h-7 flex justify-center items-center rounded-full z-20 ${step >= 1 && `border-green-800 text-white bg-green-800`}`,
+          `z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#ddd] ${step >= 1 && `border-green-800 bg-green-800 text-white`}`,
         )}
       >
         1
       </div>
       <div
         className={twMerge(
-          `bg-[#ddd] w-7 h-7 flex justify-center items-center rounded-full z-20 ${step >= 2 && `border-green-800 text-white bg-green-800`}`,
+          `z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#ddd] ${step >= 2 && `border-green-800 bg-green-800 text-white`}`,
         )}
       >
         2
       </div>
       <div
         className={twMerge(
-          `bg-[#ddd] w-7 h-7 flex justify-center items-center rounded-full z-20 ${step >= 3 && `border-green-800 text-white bg-green-800`}`,
+          `z-20 flex h-7 w-7 items-center justify-center rounded-full bg-[#ddd] ${step >= 3 && `border-green-800 bg-green-800 text-white`}`,
         )}
       >
         3

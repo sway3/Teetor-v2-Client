@@ -1,15 +1,17 @@
+import { UserData } from '@/types/types';
+
 const nameRegex = /^[a-zA-Z]+$/;
 const emailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const birthdayRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-export const isForm1Valid = (formData: any) => {
+export const isForm1Valid = (formData: UserData, selectedImg: File | null) => {
   const firstName = nameRegex.test(formData.firstName);
   const lastName = nameRegex.test(formData.lastName);
   const email = emailRegex.test(formData.email);
   const birthday = birthdayRegex.test(formData.birthday);
 
-  return firstName && lastName && email && birthday;
+  return firstName && lastName && email && birthday && selectedImg;
 };
 
 export const isForm2Valid = (formData: any) => {
@@ -17,8 +19,8 @@ export const isForm2Valid = (formData: any) => {
   const isSelected = formData.role.length > 0;
 
   if (formData.role.includes('Mentor')) {
-    const profession = formData.profession.length > 0;
-    const canHelpWith = formData.canHelpWith.length > 0;
+    const profession = formData.mentorProfession.length > 0;
+    const canHelpWith = formData.mentorCanHelpWith.length > 0;
     const description = formData.description;
 
     isValid = isSelected && profession && canHelpWith && description;

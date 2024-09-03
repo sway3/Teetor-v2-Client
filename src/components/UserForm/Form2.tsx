@@ -17,25 +17,25 @@ export default function Form2({
   const roleOptions = ['Mentor', 'Mentee'];
 
   const handleProfSearch = (thisProfession: string) => {
-    const profession = formData.profession;
+    const mentorProfession = formData.mentorProfession;
 
-    if (profession.includes(thisProfession)) {
+    if (mentorProfession.includes(thisProfession)) {
       setFormData(formData);
     } else {
       setFormData((prev: any) => ({
         ...prev,
-        profession: [...profession, thisProfession],
+        mentorProfession: [...mentorProfession, thisProfession],
       }));
     }
   };
 
   const handleSkillSearch = (thisSkill: string) => {
-    if (formData.canHelpWith.includes(thisSkill)) {
+    if (formData.mentorCanHelpWith.includes(thisSkill)) {
       setFormData(formData);
     } else {
       setFormData({
         ...formData,
-        canHelpWith: [...formData.canHelpWith, thisSkill],
+        mentorCanHelpWith: [...formData.mentorCanHelpWith, thisSkill],
       });
     }
   };
@@ -48,7 +48,7 @@ export default function Form2({
 
     setFormData({
       ...formData,
-      profession: formData.profession.filter(
+      mentorProfession: formData.mentorProfession.filter(
         (prof: string) => prof !== thisProfession,
       ),
     });
@@ -62,7 +62,7 @@ export default function Form2({
 
     setFormData({
       ...formData,
-      canHelpWith: formData.canHelpWith.filter(
+      mentorCanHelpWith: formData.mentorCanHelpWith.filter(
         (skill: string) => skill !== thisSkill,
       ),
     });
@@ -72,7 +72,7 @@ export default function Form2({
     <>
       <div className="mt-3">
         <h1 className="text-2xl">Who are you?</h1>
-        <p className="text-gray-500 text-base/5 mt-2">
+        <p className="mt-2 text-base/5 text-gray-500">
           You can choose your role in between mentor and mentee, or even both.
         </p>
         <div className="mt-3">
@@ -85,19 +85,19 @@ export default function Form2({
         {formData.role.includes('Mentor') && (
           <div className="mt-6">
             <h2 className="mt-3 text-xl">For mentors</h2>
-            <h3 className="mt-3">What is your profession?</h3>
+            <h3 className="mt-3">What is your mentorProfession?</h3>
             <SkillSearch
               option="profession"
               onResultChange={handleProfSearch}
             />
-            {formData.profession && (
-              <div className="flex flex-wrap gap-1 mt-3">
-                {formData.profession?.map(
-                  (profession: string, index: number) => (
+            {formData.mentorProfession && (
+              <div className="mt-3 flex flex-wrap gap-1">
+                {formData.mentorProfession?.map(
+                  (mentorProfession: string, index: number) => (
                     <SkillChip
                       key={index}
-                      label={profession}
-                      onClick={(e) => handleProfChip(e, profession)}
+                      label={mentorProfession}
+                      onClick={(e) => handleProfChip(e, mentorProfession)}
                     />
                   ),
                 )}
@@ -109,15 +109,17 @@ export default function Form2({
               option="canhelpwith"
               onResultChange={handleSkillSearch}
             />
-            {formData.canHelpWith && (
-              <div className="flex flex-wrap gap-1 mt-3">
-                {formData.canHelpWith?.map((skill: string, index: number) => (
-                  <SkillChip
-                    key={index}
-                    label={skill}
-                    onClick={(e) => handleSkillChip(e, skill)}
-                  />
-                ))}
+            {formData.mentorCanHelpWith && (
+              <div className="mt-3 flex flex-wrap gap-1">
+                {formData.mentorCanHelpWith?.map(
+                  (skill: string, index: number) => (
+                    <SkillChip
+                      key={index}
+                      label={skill}
+                      onClick={(e) => handleSkillChip(e, skill)}
+                    />
+                  ),
+                )}
               </div>
             )}
 
@@ -127,7 +129,7 @@ export default function Form2({
             </h3>
             <textarea
               placeholder="Enter description"
-              className="mt-1 w-full border border-gray-400 rounded-lg p-2 resize-y"
+              className="mt-1 w-full resize-y rounded-lg border border-gray-400 p-2"
               onChange={handleFormChange}
               name="description"
             />

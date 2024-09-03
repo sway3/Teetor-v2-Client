@@ -22,7 +22,7 @@ export default function AuthProvider({ children }: AuthContextProviderProps) {
     queryKey: ['auth'],
     queryFn: () => checkAccessToken(),
     retry: false,
-  });
+  }); 
 
   const value = { isAuthed };
 

@@ -17,7 +17,7 @@ export default function NavLogo({
     <h1>
       <Link
         href="/"
-        className={twMerge(`flex gap-1 items-center ${className}`)}
+        className={twMerge(`flex items-center gap-1 ${className}`)}
       >
         <Logo className={logoSize} />
         <span className={`font-bold ${textSize}`}>teetor</span>

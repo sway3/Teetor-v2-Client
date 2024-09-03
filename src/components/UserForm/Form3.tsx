@@ -37,6 +37,7 @@ export default function Form3({ formData, setFormData }: FormProps) {
           options={dayOptions}
           selectedOptions={formData.availableDays}
           setFormData={setFormData}
+          editable={true}
         />
       </div>
     </div>

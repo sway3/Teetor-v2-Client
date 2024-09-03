@@ -7,10 +7,10 @@ interface SkillChipProps {
 
 export default function SkillChip({ label, onClick }: SkillChipProps) {
   return (
-    <div className="text-sm w-fit px-3 py-2 rounded-full cursor-pointer bg-green-100">
+    <div className="w-fit cursor-pointer rounded-full bg-green-100 px-3 py-2 text-sm">
       <span>{label}</span>
-      <button onClick={onClick} className="bg-gray-200 ml-1 p-0.5 rounded-full">
-        <DeleteIcon className="w-3 h-3 fill-gray-700" />
+      <button onClick={onClick} className="ml-1 rounded-full bg-gray-200 p-0.5">
+        <DeleteIcon className="h-3 w-3 fill-gray-700" />
       </button>
     </div>
   );

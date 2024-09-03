@@ -6,7 +6,16 @@ export const Get = async (url: string): Promise<AxiosResponse> => {
   return response;
 };
 
-export const Post = async (url: string, data?: any): Promise<AxiosResponse> => {
-  const response = await axiosInstance.post(url, data);
+export const Post = async (
+  url: string,
+  data?: any,
+  headers = {},
+): Promise<AxiosResponse> => {
+  const response = await axiosInstance.post(url, data, headers);
+  return response;
+};
+
+export const Put = async (url: string, data: any, headers = {}) => {
+  const response = await axiosInstance.put(url, data, headers);
   return response;
 };

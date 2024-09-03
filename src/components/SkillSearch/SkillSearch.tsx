@@ -47,7 +47,7 @@ export default function SkillSearch({
             ? 'Enter your profession'
             : 'Enter your skills'
         }
-        className="w-full border rounded-md border-gray-400 p-2"
+        className="w-full rounded-md border border-gray-400 p-2"
       />
       {query && results.length > 0 && (
         <ul className="h-28 overflow-scroll border">
@@ -58,7 +58,7 @@ export default function SkillSearch({
                 onResultChange(result.item);
                 dropdownHandler();
               }}
-              className="p-2 bg-green-50 border-b"
+              className="border-b bg-green-50 p-2"
             >
               {result.item}
             </li>
