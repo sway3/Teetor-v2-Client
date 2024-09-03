@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import NavLogo from './NavLogo';
+import NavLogo from '../Logo/Logo';
 
 export default function DesktopNav() {
   return (

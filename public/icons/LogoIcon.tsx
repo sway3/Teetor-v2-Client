@@ -1,4 +1,4 @@
-export default function Logo({ ...props }) {
+export default function LogoIcon({ ...props }) {
   return (
     <svg
       id="Layer_1"

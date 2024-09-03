@@ -1,6 +1,6 @@
 'use client';
 
-import { googleOAuthReq } from '@/apis/authAPIs/authAPIs';
+import { googleOAuthReq } from '@/apis/authAPIs';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 

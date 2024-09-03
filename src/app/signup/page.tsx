@@ -1,4 +1,4 @@
-import Progress from '@/components/UserForm/Progress';
+import Forms from '@/components/UserForm/Forms';
 import UserForm from '@/components/UserForm/UserForm';
 
 export default function SignUpPage() {
@@ -9,7 +9,7 @@ export default function SignUpPage() {
         Please fill out additional information to start matching with your
         mentee / mentor.
       </p>
-      <Progress />
+      <UserForm />
     </div>
   );
 }

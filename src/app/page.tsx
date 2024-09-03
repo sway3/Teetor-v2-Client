@@ -1,5 +1,5 @@
 import GSIButton from '@/components/GoogleSignIn/GSIButton';
-import NavLogo from '@/components/NavBar/NavLogo';
+import Logo from '@/components/Logo/Logo';
 import Slideshow from '@/components/Slideshow/Slideshow';
 
 export default function Home() {
@@ -7,11 +7,7 @@ export default function Home() {
     <div className="h-[calc(100vh-3rem) relative w-full">
       <Slideshow />
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-10">
-        <NavLogo
-          className="text-white"
-          logoSize="w-16 h-16"
-          textSize="text-6xl"
-        />
+        <Logo className="text-white" logoSize="w-16 h-16" textSize="text-6xl" />
         <h2 className="text-center text-3xl font-extralight text-white">
           Where <span className="font-extrabold">Mentors Inspire</span>,
           <br />
